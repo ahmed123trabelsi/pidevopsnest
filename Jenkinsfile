@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        NEXUS_TOKEN = 'a11c4160-7643-3de8-a6a0-e994f4f17cf5'
+        NEXUS_TOKEN = '2eb17cd6-34e8-3709-804b-960a4df86678'
     }
 
     stages {
