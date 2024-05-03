@@ -28,7 +28,7 @@ services:
   front:
     container_name: front
     image: server_web
-    build: ../HR_Management
+    build: ../pidevopsfront
     restart: always
     ports:
       - "4200:80"

@@ -8,17 +8,17 @@ pipeline {
     stages {
         stage('Checkout Frontend') {
             steps {
-                dir('HR_Management') {
-                    git url: 'https://github.com/aymeennefzi/HR_Management.git', branch: 'master'
+                dir('pidevopsfront') {
+                    git url: 'https://github.com/ahmed123trabelsi/pidevopsfront.git', branch: 'main'
                 }
             }
         }
 
         stage("Checkout Backend") {
             steps {
-                dir('HR_Managment_application_Backend-') {
+                dir('pidevopsnest') {
                     echo 'Pulling backend repository...'
-                    git branch: 'master', url: 'https://github.com/aymeennefzi/HR_Managment_application_Backend-.git'
+                    git branch: 'main', url: 'https://github.com/ahmed123trabelsi/pidevopsnest.git'
                 }
             }
             post {
@@ -34,7 +34,7 @@ pipeline {
         stage('Install dependencies (Backend)') {
             steps {
                 script {
-                    dir('HR_Managment_application_Backend-') {
+                    dir('pidevopsnest') {
                         sh('npm install --force')
                     }
                 }
@@ -44,7 +44,7 @@ pipeline {
         stage('Build application (Backend)') {
             steps {
                 script {
-                    dir('HR_Managment_application_Backend-') {
+                    dir('pidevopsnest') {
                         sh('npm run build')
                     }
                 }
@@ -54,13 +54,13 @@ pipeline {
         stage('Dépôt sur Nexus') {
             steps {
                 script {
-                    dir('HR_Managment_application_Backend-') {
+                    dir('pidevopsnest') {
                         // Setup the .npmrc file using environment variable for auth
-                        sh 'echo registry=http://172.16.1.70/:8081/repository/npmHosted/ > .npmrc'
-                        sh 'echo //172.16.1.70/:8081/repository/npmHosted/:_authToken=${NEXUS_TOKEN} >> .npmrc'
+                        sh 'echo registry=http://192.168.33.10:8081/repository/npmhostednest/ > .npmrc'
+                        sh 'echo //192.168.33.10:8081/repository/npmhostednest/:_authToken=${NEXUS_TOKEN} >> .npmrc'
                         
                         // Publish package to Nexus npm repository
-                        sh 'npm publish --registry=http://172.16.1.70/:8081/repository/npmHosted/'
+                        sh 'npm publish --registry=http://192.168.33.10:8081/repository/npmhostednest/'
                     }
                 }
             }
@@ -69,7 +69,7 @@ pipeline {
         stage('Remove Previous Containers') {
             steps {
                 script {
-                    dir('HR_Managment_application_Backend-') {
+                    dir('pidevopsnest') {
                         sh 'ls -la' // List the contents of the current directory
                         sh 'docker compose down'
                         sh 'docker rmi server_app:latest --force'
@@ -83,7 +83,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    dir('HR_Managment_application_Backend-') {
+                    dir('pidevopsnest') {
                         sh 'ls -la' // List the contents of the current directory
                         sh 'docker compose up -d'
                     }
